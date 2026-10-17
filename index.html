@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'wasm-unsafe-eval'; object-src 'none'; base-uri 'none'" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f0e6" />
+    <meta name="description" content="Read and practice typing with your own books, with word meanings and gradual language translation." />
+    <title>languagereader</title>
+    <script type="module" crossorigin src="./index-BiE5Ht_-.js"></script>
+    <link rel="modulepreload" crossorigin href="./rolldown-runtime-W7wSyTde.js">
+    <link rel="modulepreload" crossorigin href="./preload-helper-CRzLMJPS.js">
+    <link rel="stylesheet" crossorigin href="./index-Bao9oTML.css">
+  </head>
+  <body>
+    <header class="masthead">
+      <a class="wordmark" href="#" id="home">language<span>reader</span></a>
+      <div class="top-actions">
+        <select id="books" aria-label="Your books" hidden></select>
+        <button id="account-toggle" class="text-button">Account</button>
+        <button id="vocabulary-toggle" class="text-button">My words <span id="word-count">0</span></button>
+        <button id="open-file" class="text-button">Open a book <span aria-hidden="true">↗</span></button>
+        <button id="settings-toggle" class="type-button" aria-label="Reading settings" aria-expanded="false" aria-controls="settings">Aa</button>
+      </div>
+    </header>
+    <input id="file" type="file" accept=".epub,.pdf,.txt,.md,.text" hidden />
+    <main>
+      <section id="empty" class="empty">
+        <div class="book-mark" aria-hidden="true"><i></i><i></i></div>
+        <p class="eyebrow">languagereader</p>
+        <h1>Open a book.</h1>
+        <p class="intro">Read at your own pace.<br>Hover for a quick meaning. Click for more.</p>
+        <button id="choose-file" class="primary-button">Choose a file <span aria-hidden="true">↗</span></button>
+        <p class="file-types">EPUB · PDF · TXT · Markdown</p>
+        <p class="local-note">Your books and your place stay in this browser.</p>
+      </section>
+      <section id="reader" hidden aria-label="Book reader">
+        <div class="book-heading"><h1 id="book-title"></h1><p id="book-meta"></p></div>
+        <div id="pages" class="pages" aria-busy="false"></div>
+        <nav id="page-navigation" class="page-navigation" aria-label="Page navigation">
+          <button id="previous" aria-label="Previous page">←</button>
+          <span id="page-label" aria-live="polite"></span>
+          <button id="next" aria-label="Next page">→</button>
+        </nav>
+        <p id="scroll-progress" class="scroll-progress" hidden></p>
+        <section id="typing-panel" class="typing-panel" aria-label="Typing practice" hidden>
+          <label for="typing-input">Type as you read</label>
+          <textarea id="typing-input" rows="2" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-describedby="typing-status" dir="auto"></textarea>
+          <div class="typing-footer"><p id="typing-status" role="status"></p><button id="typing-next" hidden>Continue →</button></div>
+        </section>
+      </section>
+    </main>
+    <aside id="settings" class="settings" aria-label="Reading settings" hidden>
+      <div class="panel-heading"><h2>Reading settings</h2><button id="close-settings" aria-label="Close reading settings">×</button></div>
+      <label class="check-setting"><input id="typing-toggle" type="checkbox" /><span>Type as you read</span></label>
+      <p class="setting-note">Practice with short passages from your book. Mistakes are marked but do not block you. Press Enter or Continue after a passage to save your place. Its wording stays fixed while you type.</p>
+      <label class="setting" for="layout">Page layout<select id="layout"><option value="single">One page</option><option value="spread">Two pages</option><option value="scroll">Continuous scroll</option></select></label>
+      <label class="setting" for="font">Typeface<select id="font"><option value="book">Book serif</option><option value="classic">Classic serif</option><option value="sans">Sans serif</option></select></label>
+      <label class="setting" for="size"><span>Font size <output id="size-value">21 px</output></span><input id="size" type="range" min="14" max="36" step="1" value="21" /></label>
+      <fieldset class="setting"><legend>Paper</legend><div class="paper-options"><button data-theme="cream" class="paper-swatch cream" aria-label="Cream paper" aria-pressed="true">Aa</button><button data-theme="light" class="paper-swatch light" aria-label="White paper" aria-pressed="false">Aa</button><button data-theme="dark" class="paper-swatch dark" aria-label="Dark mode" aria-pressed="false">Aa</button></div></fieldset>
+      <label class="color-setting" for="ink">Text color<input id="ink" type="color" value="#24221e" /></label>
+      <div class="divider"></div>
+      <label class="setting" for="language">Book language<select id="language"><option value="auto">Detect automatically</option></select></label>
+      <label class="check-setting"><input id="translation-toggle" type="checkbox" checked /><span>Enable translations</span></label>
+      <label class="check-setting"><input id="word-toggle" type="checkbox" checked /><span>Show word meanings</span></label>
+      <label class="check-setting"><input id="sentence-toggle" type="checkbox" checked /><span>Translate the surrounding sentence</span></label>
+      <p class="setting-note">Hover for a short meaning; click or tap for the full lookup. Visible words are prepared ahead after online lookup consent. Turning translations off also pauses gradual translation.</p>
+      <button id="privacy-settings" class="understated-button">Online lookup privacy</button>
+      <div class="divider"></div>
+      <label class="setting" for="target-language">Gradual translation into<select id="target-language"></select></label>
+      <label class="setting" for="immersion"><span>Words to translate <output id="immersion-value">0% · off</output></span><input id="immersion" type="range" min="0" max="100" step="5" value="0" /></label>
+      <p class="setting-note">Mix a growing share of words into the original text. Increase the slider to add more; lower it to restore words. Word order stays original, so mixed-language grammar and word choices can be imperfect.</p>
+      <p id="immersion-status" class="setting-note" role="status"></p>
+      <p id="sync-status" role="status"></p>
+      <p class="storage-note">Books and progress are saved on this device, in this browser. Clearing site data removes them.</p>
+    </aside>
+    <div id="quick-gloss" class="quick-gloss" role="tooltip" hidden></div>
+    <dialog id="lookup" class="lookup" aria-labelledby="lookup-word">
+      <div class="lookup-heading"><div><p class="eyebrow" id="lookup-language"></p><h2 id="lookup-word"></h2></div><button id="close-lookup" aria-label="Close word meaning">×</button></div>
+      <p id="pronunciation" class="pronunciation" hidden></p>
+      <p id="original-word" class="original-word" hidden></p>
+      <section id="word-section"><h3>Word meaning</h3><div id="definition" aria-live="polite"></div></section>
+      <section id="sentence-section"><h3>In the sentence</h3><blockquote id="source-sentence" dir="auto"></blockquote><p id="sentence-meaning" aria-live="polite"></p></section>
+      <p id="lookup-source" class="lookup-source"></p>
+      <button id="save-word" class="save-word">I’m learning this word</button>
+    </dialog>
+    <dialog id="vocabulary" class="vocabulary" aria-labelledby="vocabulary-title">
+      <div class="panel-heading"><h2 id="vocabulary-title">My words</h2><button id="close-vocabulary" aria-label="Close my words">×</button></div>
+      <p class="setting-note">Save unfamiliar words from their lookup. Mark them learned when you’re ready.</p>
+      <div id="vocabulary-list"></div>
+    </dialog>
+    <dialog id="account" class="account" aria-labelledby="account-title">
+      <div class="panel-heading"><h2 id="account-title">Account</h2><button id="close-account" aria-label="Close account">×</button></div>
+      <p id="account-details" class="account-status"></p>
+      <form id="account-form" class="account-form">
+        <label>Username<input id="username" name="username" autocomplete="username" pattern="[a-zA-Z0-9_]{3,24}" minlength="3" maxlength="24" required /></label>
+        <label>Password<input id="password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="128" required /></label>
+        <div class="account-actions"><button id="sign-in" type="submit" class="primary-button">Sign in</button><button id="sign-up" type="submit">Create account</button></div>
+      </form>
+      <p id="account-note" class="setting-note">Accounts have separate libraries. Your unsigned-in books stay here; open their files again after signing in to add them to your account. Keep your password safe—there is no email password recovery.</p>
+      <p id="account-error" class="account-error" role="alert"></p>
+      <button id="sign-out" hidden>Sign out</button>
+    </dialog>
+    <dialog id="privacy" class="privacy" aria-labelledby="privacy-title">
+      <p class="eyebrow">Before your first lookup</p><h2 id="privacy-title">A small note on privacy.</h2>
+      <p>Books are kept in this browser and, when signed in, on your account server. Looking up a word sends that word to Wiktionary and, when needed, MyMemory for a free English translation.</p>
+      <p>If sentence translation is on, its surrounding sentence is also sent to MyMemory. These services receive your IP address and process requests under their own policies. Translation can be imperfect and daily limits may apply.</p>
+      <p>For quick hover meanings, visible words are prepared in the background through Wiktionary and, when needed, MyMemory. A new word can take a moment to prepare. When gradual translation is on, selected words in the reading area are sent to MyMemory for translation into your chosen language. Results are cached in this browser. Turning ordinary sentence lookups off does not turn gradual translation off.</p>
+      <p><a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" target="_blank" rel="noreferrer">Wiktionary privacy</a> · <a href="https://mymemory.translated.net/doc/en/privacy.php" target="_blank" rel="noreferrer">MyMemory privacy</a></p>
+      <label class="check-setting"><input id="privacy-sentence" type="checkbox" checked /><span>Also translate the surrounding sentence</span></label>
+      <div class="dialog-actions"><button id="privacy-cancel">Keep reading</button><button id="privacy-accept" class="primary-button">Allow online lookups</button></div>
+      <button id="privacy-revoke" class="understated-button" hidden>Turn off online lookups</button>
+    </dialog>
+    <div id="status" class="status" role="status" hidden></div>
+    <div id="measure" class="page-body measure" aria-hidden="true"></div>
+  </body>
+</html>
